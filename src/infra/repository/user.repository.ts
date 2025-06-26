@@ -44,6 +44,14 @@ class UserRepository {
   async findByEmail(email: string) {
     return this.user.findOne({ where: { email } });
   }
+
+  async softDelete(id: string, status: boolean) {
+    const user = await this.user.findByPk(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.update({ deletedAt: status ? new Date() : null });
+  }
 }
 
 export default new UserRepository();

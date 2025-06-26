@@ -112,6 +112,17 @@ class UserService {
     logger.info(`[GetClients] Retrieved ${clientsWithAddress.length} clients`);
     return clientsWithAddress;
   }
+
+  async deleteUser(userId: string, status: boolean): Promise<boolean> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      logger.warn(`[DeleteUser] User with ID ${userId} not found`);
+      return false;
+    }
+    await this.userRepository.softDelete(userId, status);
+    logger.info(`[DeleteUser] User with ID ${userId} deleted successfully`);
+    return true;
+  }
 }
 
 export default new UserService();

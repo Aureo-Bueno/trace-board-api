@@ -17,4 +17,10 @@ router.get(
   asyncHandler(logController.getUserActionLogs),
 );
 
+router.post(
+  '/logout',
+  asyncHandler(authMiddleware),
+  asyncHandler(logController.logoutUser),
+);
+
 export default router;

@@ -9,6 +9,13 @@ import Address from "./models/address";
 
 export async function seedDatabase() {
   try {
+    await Address.destroy({ where: {}, force: true });
+    await User.destroy({ where: {}, force: true });
+    await Role.destroy({ where: {}, force: true });
+    await UserRoles.destroy({ where: {}, force: true });
+    await Schedule.destroy({ where: {}, force: true });
+    await Room.destroy({ where: {}, force: true });
+    await Address.destroy({ where: {}, force: true });
     await Role.bulkCreate([{ name: "admin" }, { name: "user" }], {
       ignoreDuplicates: true,
     });
@@ -43,6 +50,11 @@ export async function seedDatabase() {
         city: "Admin City",
         state: "Admin State",
         zipCode: "12345",
+        number: "1",
+        neighborhood: "Admin Neighborhood",
+      },
+      defaults: {
+        complement: "Suite 100",
       },
     });
     await Address.findOrCreate({

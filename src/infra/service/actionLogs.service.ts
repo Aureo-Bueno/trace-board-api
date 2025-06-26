@@ -104,6 +104,19 @@ class ActionLogsService {
       recordId: log.recordId,
     }));
   }
+
+  async logoutUser(userId: string) {
+    const actionLogData = {
+      userId,
+      actionType: "LOGOUT",
+      tableName: "users",
+      recordId: userId,
+      ipAddress: null,
+    };
+
+    await this.createActionLog(actionLogData);
+    this.logger.info(`[LogoutUser] User with ID: ${userId} logged out`);
+  }
 }
 
 export default new ActionLogsService();

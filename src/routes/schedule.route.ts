@@ -5,10 +5,9 @@ import scheduleController from '../controllers/schedule.controller';
 
 const router = Router();
 
+router.get('/schedules', asyncHandler(authMiddleware), asyncHandler(scheduleController.getSchedules));
 router.get('/:userId', asyncHandler(authMiddleware), asyncHandler(scheduleController.getScheduleByUserId));
-
 router.put('/', asyncHandler(authMiddleware), asyncHandler(scheduleController.cancelSchedule));
-
-router.get('/schedules-pending', asyncHandler(authMiddleware), asyncHandler(scheduleController.getSchedulesPending));
+router.post('/', asyncHandler(authMiddleware), asyncHandler(scheduleController.createSchedule));
 
 export default router;

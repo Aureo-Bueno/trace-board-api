@@ -6,7 +6,7 @@ import userController from '../controllers/user.controller';
 const router = Router();
 
 router.put('/', asyncHandler(authMiddleware), asyncHandler(userController.update));
-
+router.put('/:userId/delete', asyncHandler(authMiddleware), asyncHandler(userController.deleteUser));
 router.get('/clients', asyncHandler(authMiddleware), asyncHandler(userController.getClients));
 
 export default router;

@@ -11,12 +11,14 @@ import meRoutes from "./routes/me.route";
 import { seedDatabase } from "./seed";
 import userRoute from "./routes/user.route";
 import scheduleRoute from "./routes/schedule.route";
+import roomRoute from "./routes/room.route";
 
 class App {
   public app: Application;
 
   constructor() {
     this.app = express();
+    
     this.middlewares();
     this.database();
     this.routes();
@@ -43,24 +45,32 @@ class App {
 
   private database(): void {
     sequelize
-      .sync({ force: false, alter: true })
+      .sync()
       .then(async () => {
-        logger.info('Database connected successfully');
-        await seedDatabase();
+        logger.info("Database connected successfully");
+        //await seedDatabase();
       })
       .catch((error) => {
-        logger.error('Database connection failed:', error);
+        logger.error("Database connection failed:", error);
         process.exit(1);
       });
   }
 
   private routes(): void {
+    this.app.use((req, res, next) => { 
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
+      res.set('Surrogate-Control', 'no-store');
+      next();
+    });
     this.app.use("/logs", logsRoutes);
     this.app.use("/login", loginRoutes);
     this.app.use("/register", registerRoutes);
     this.app.use("/me", meRoutes);
     this.app.use("/user", userRoute);
     this.app.use("/schedule", scheduleRoute);
+    this.app.use("/room", roomRoute);
   }
 }
 

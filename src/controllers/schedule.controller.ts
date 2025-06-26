@@ -25,12 +25,22 @@ class ScheduleController {
     return res.status(200).json(schedule);
   };
 
-  getSchedulesPending = async (req: Request, res: Response) => {
-    const schedules = await this.scheduleService.getSchedulesPending();
+  getSchedules = async (req: Request, res: Response) => {
+    const schedules = await this.scheduleService.getSchedulesWithRooms();
     if (!schedules || schedules.length === 0) {
-      return res.status(404).json({ message: "No pending schedules found" });
+      return res.status(404).json({ message: "No schedules found" });
     }
     return res.status(200).json(schedules);
+  };
+
+  createSchedule = async (req: Request, res: Response) => {
+    try {
+
+      const newSchedule = await this.scheduleService.createSchedule(req.body);
+      return res.status(201).json(newSchedule);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
   };
 }
 export default new ScheduleController();

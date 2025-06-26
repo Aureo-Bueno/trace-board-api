@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
+import { logAction } from "./actionLogs";
+import logger from "../config/logger";
 
 class Address extends BaseModel {
   public userId!: string;
@@ -59,6 +61,16 @@ Address.init(
   {
     tableName: "addresses",
     sequelize,
+    hooks: {
+      afterCreate: (instance, options) => {
+        logAction("CREATE", instance, options);
+        logger.info(`[Address] Created address with ID: ${instance.id}`);
+      },
+      afterUpdate: (instance, options) => {
+        logAction("UPDATE", instance, options);
+        logger.info(`[Address] Updated address with ID: ${instance.id}`);
+      },
+    },
   }
 );
 

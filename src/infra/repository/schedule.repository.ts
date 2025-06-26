@@ -1,3 +1,4 @@
+import { CreateOptions } from "sequelize";
 import Schedule from "../../models/schedule";
 
 class ScheduleRepository {
@@ -7,19 +8,21 @@ class ScheduleRepository {
     this.schedule = Schedule;
   }
 
-  async findAll() {
-    return this.schedule.findAll();
+  async findAll(): Promise<Schedule[]> {
+    return await this.schedule.findAll();
   }
 
-  async findById(id: string) {
-    return this.schedule.findByPk(id);
+  async findById(id: string): Promise<Schedule | null> {
+    return await this.schedule.findByPk(id);
   }
 
-  async create(scheduleData: any) {
+  async create(
+    scheduleData: any,
+  ): Promise<Schedule> {
     return await this.schedule.create(scheduleData);
   }
 
-  async update(id: string, scheduleData: any) {
+  async update(id: string, scheduleData: any): Promise<Schedule | null> {
     const schedule = await this.schedule.findByPk(id);
     if (!schedule) {
       throw new Error("Schedule not found");
