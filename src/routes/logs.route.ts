@@ -11,4 +11,10 @@ router.get(
   asyncHandler(logController.getAllActionLogs),
 );
 
+router.get(
+  '/user-logs',
+  asyncHandler(authMiddleware),
+  asyncHandler(logController.getUserActionLogs),
+);
+
 export default router;

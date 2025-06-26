@@ -12,6 +12,12 @@ class LogsController {
     const logs = await this.actionLogsService.getAllActionLogs();
     return res.status(200).json(logs);
   };
+
+  getUserActionLogs = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const logs = await this.actionLogsService.getUserActionLogs(userId?.toString() || "");
+    return res.status(200).json(logs);
+  };
 }
 
 export default new LogsController();

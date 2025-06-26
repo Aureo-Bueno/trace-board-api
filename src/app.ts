@@ -43,7 +43,7 @@ class App {
 
   private database(): void {
     sequelize
-      .sync({ force: true })
+      .sync({ force: false, alter: true })
       .then(async () => {
         logger.info('Database connected successfully');
         await seedDatabase();

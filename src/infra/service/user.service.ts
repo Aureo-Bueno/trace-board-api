@@ -1,12 +1,22 @@
 import logger from "../../config/logger";
+import User from "../../models/user";
 import { UpdateUserRequest } from "../../types/user/user.update";
 import userRepository from "../repository/user.repository";
+import addressService from "./address.service";
+import roleService from "./role.service";
+import userRolesService from "./userRoles.service";
 
 class UserService {
   private userRepository: typeof userRepository;
+  private addressService: typeof addressService;
+  private userRolesService: typeof userRolesService;
+  private roleService: typeof roleService;
 
   constructor() {
     this.userRepository = userRepository;
+    this.addressService = addressService;
+    this.userRolesService = userRolesService;
+    this.roleService = roleService;
   }
 
   async getAllUsers() {
@@ -32,7 +42,7 @@ class UserService {
     return true;
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<User | null> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       logger.warn(`[GetUserById] User with ID ${id} not found`);
@@ -47,6 +57,60 @@ class UserService {
 
     logger.info(`[UpdateUser] User with ID ${user.id} updated`);
     return user;
+  }
+
+  async getClients() {
+    const clients = await this.userRepository.findAll();
+
+    const clientsWithAddress = await Promise.all(
+      clients.map(async (client) => {
+        const address = await this.addressService.getByUserId(client.id);
+        const data = client.dataValues || client;
+        const {
+          id,
+          email,
+          name,
+          lastName,
+          createdAt,
+          updatedAt,
+          deletedAt,
+        } = data;
+        const userRoles = await this.userRolesService.getUserRoleById(id);
+
+        const rolePromises = userRoles?.map((role) => this.roleService.getRoleById(role.roleId)) || [];
+        const resolvedRoles = await Promise.all(rolePromises);
+        const isAdmin = resolvedRoles.some((role) => role?.name === "admin");
+        return {
+          id,
+          email,
+          name,
+          lastName,
+          createdAt,
+          updatedAt,
+          deletedAt,
+          isAdmin: isAdmin,
+          address: address
+            ? {
+                id: address.id,
+                zipCode: address.zipCode,
+                street: address.street,
+                number: address.number,
+                complement: address.complement,
+                neighborhood: address.neighborhood,
+                city: address.city,
+                state: address.state,
+              }
+            : null,
+        };
+      })
+    );
+
+    if (!clientsWithAddress || clientsWithAddress.length === 0) {
+      logger.warn(`[GetClients] No clients found`);
+      return [];
+    }
+    logger.info(`[GetClients] Retrieved ${clientsWithAddress.length} clients`);
+    return clientsWithAddress;
   }
 }
 

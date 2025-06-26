@@ -26,6 +26,22 @@ class AddressService {
       throw error;
     }
   }
+
+  async getByUserId(userId: string) {
+    this.logger.info(`[AddressService] Retrieving address for user ID: ${userId}`);
+    try {
+      const address = await this.addressRepository.findByUserId(userId);
+      if (!address) {
+        this.logger.warn(`[AddressService] No address found for user ID: ${userId}`);
+        return null;
+      }
+      this.logger.info(`[AddressService] Address found for user ID: ${userId}`);
+      return address;
+    } catch (error) {
+      this.logger.error("[AddressService] Error retrieving address:", error);
+      throw error;
+    }
+  }
 }
 
 export default new AddressService();

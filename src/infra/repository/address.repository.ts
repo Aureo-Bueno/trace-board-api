@@ -34,6 +34,10 @@ class AddressRepository {
     }
     return address.update({ deletedAt: new Date() });
   }
+
+  async findByUserId(userId: string) {
+    return this.address.findOne({ where: { userId } });
+  }
 }
 
 export default new AddressRepository();

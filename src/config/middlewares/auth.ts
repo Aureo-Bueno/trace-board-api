@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import JwtUtil from '../../utils/jwt';
 import User from '../../models/user';
+import logger from '../logger';
 
 declare global {
   namespace Express {

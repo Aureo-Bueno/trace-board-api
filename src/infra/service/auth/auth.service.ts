@@ -30,6 +30,8 @@ class AuthService {
 
     const token = JwtUtil.sign({ id: user.id });
     this.logger.info("[Login] User logged in successfully:", user.id);
+    this.createRegisterActionLog(user);
+    this.logger.info("[Login] Action log created for user:", user.id);
     return { token };
   }
 

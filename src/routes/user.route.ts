@@ -7,4 +7,6 @@ const router = Router();
 
 router.put('/', asyncHandler(authMiddleware), asyncHandler(userController.update));
 
+router.get('/clients', asyncHandler(authMiddleware), asyncHandler(userController.getClients));
+
 export default router;
