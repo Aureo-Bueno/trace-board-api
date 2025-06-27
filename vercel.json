@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/[...all].ts": {
-      "runtime": "nodejs22.x"
-    }
-  },
   "routes": [
     {
       "src": "/(.*)",
