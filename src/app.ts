@@ -20,7 +20,7 @@ class App {
 
   constructor() {
     this.app = express();
-    
+
     this.middlewares();
     this.database();
     this.routes();
@@ -47,10 +47,10 @@ class App {
 
   private database(): void {
     sequelize
-      .sync()
+      .sync({ alter: true })
       .then(async () => {
         logger.info("Database connected successfully");
-        //await seedDatabase();
+        await seedDatabase();
       })
       .catch((error) => {
         logger.error("Database connection failed:", error);
@@ -59,11 +59,14 @@ class App {
   }
 
   private routes(): void {
-    this.app.use((req, res, next) => { 
-      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-      res.set('Pragma', 'no-cache');
-      res.set('Expires', '0');
-      res.set('Surrogate-Control', 'no-store');
+    this.app.use((req, res, next) => {
+      res.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate"
+      );
+      res.set("Pragma", "no-cache");
+      res.set("Expires", "0");
+      res.set("Surrogate-Control", "no-store");
       next();
     });
     this.app.use("/logs", logsRoutes);
