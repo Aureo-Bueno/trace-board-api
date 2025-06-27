@@ -64,11 +64,11 @@ Address.init(
     hooks: {
       afterCreate: (instance: Address, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[Address] Created address with ID: ${instance.id}, ${JSON.stringify(options)}`);
+        logger.info(`[Address] Created address with ID: ${instance.id}`);
       },
       afterUpdate: (instance: Address, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[Address] Updated address with ID: ${instance.id}, ${JSON.stringify(options)}`);
+        logger.info(`[Address] Updated address with ID: ${instance.id}`);
       },
     },
   }

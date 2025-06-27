@@ -75,15 +75,13 @@ export async function seedDatabase() {
       },
     });
 
-    if (adminUser || adminRole) {
-      await UserRoles.bulkCreate(
-        [
-          { userId: adminUser?.id, roleId: adminRole.id },
-          { userId: clientUser?.id, roleId: clientRole.id },
-        ],
-        { ignoreDuplicates: true }
-      );
-    }
+    await UserRoles.bulkCreate(
+      [
+        { userId: adminUser?.id, roleId: adminRole.id },
+        { userId: clientUser?.id, roleId: clientRole.id },
+      ],
+      { ignoreDuplicates: true }
+    );
 
     const rooms = await Room.bulkCreate(
       [

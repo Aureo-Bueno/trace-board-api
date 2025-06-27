@@ -27,14 +27,15 @@ class App {
   }
 
   private middlewares(): void {
-    this.app.use(errorHandler);
-
     this.app.use(
       cors({
         origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
       })
     );
+
+    this.app.use(errorHandler);
 
     const stream = {
       write: (message: string) => logger.http(message.trim()),
@@ -47,10 +48,10 @@ class App {
 
   private database(): void {
     sequelize
-      .sync({ alter: true })
+      .sync()
       .then(async () => {
         logger.info("Database connected successfully");
-        // await seedDatabase();
+        await seedDatabase();
       })
       .catch((error) => {
         logger.error("Database connection failed:", error);

@@ -38,15 +38,15 @@ User.init(
     hooks: {
       afterCreate: (instance: User, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[User] Created user with ID: ${instance.id}, ${JSON.stringify(options)}`);
+        logger.info(`[User] Created user with ID: ${instance.id}`);
       },
       afterUpdate: (instance: User, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[User] Updated user with ID: ${instance.id}, ${JSON.stringify(options)}`);
+        logger.info(`[User] Updated user with ID: ${instance.id}`);
       },
       afterDestroy: (instance: User, options: CreateOptions<any>) => {
         logAction("DELETE", instance, options);
-        logger.info(`[User] Deleted user with ID: ${instance.id}, ${JSON.stringify(options)}`);
+        logger.info(`[User] Deleted user with ID: ${instance.id}`);
       },
     },
   }
