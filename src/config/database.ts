@@ -1,6 +1,7 @@
 // src/config/database.ts
 import { Sequelize } from 'sequelize';
 import configEnv from './config.env';
+import 'mysql2'; 
 
 const sequelize = new Sequelize(
   configEnv.get('DB_NAME') || 'your_database',
