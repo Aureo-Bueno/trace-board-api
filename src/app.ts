@@ -50,7 +50,7 @@ class App {
       .sync({ alter: true })
       .then(async () => {
         logger.info("Database connected successfully");
-        await seedDatabase();
+        // await seedDatabase();
       })
       .catch((error) => {
         logger.error("Database connection failed:", error);
