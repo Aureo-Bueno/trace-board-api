@@ -13,6 +13,7 @@ import userRoute from "./routes/user.route";
 import scheduleRoute from "./routes/schedule.route";
 import roomRoute from "./routes/room.route";
 import addressRoute from "./routes/address.route";
+import healthCheckRoute from "./routes/healthcheck.route";
 
 class App {
   public app: Application;
@@ -73,6 +74,7 @@ class App {
     this.app.use("/schedule", scheduleRoute);
     this.app.use("/room", roomRoute);
     this.app.use("/address", addressRoute);
+    this.app.use("/healthcheck", healthCheckRoute);
   }
 }
 
