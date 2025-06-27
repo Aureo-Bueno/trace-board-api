@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { CreateOptions, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
 import { logAction } from "./actionLogs";
@@ -39,13 +39,13 @@ Room.init(
     tableName: "rooms",
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: Room, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[Room] Created room with ID: ${instance.id}`);
+        logger.info(`[Room] Created room with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: Room, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[Room] Updated room with ID: ${instance.id}`);
+        logger.info(`[Room] Updated room with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   },

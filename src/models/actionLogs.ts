@@ -2,7 +2,13 @@ import { DataTypes } from "sequelize";
 import BaseModel from "./base";
 import sequelize from "../config/database";
 
-export type ActionType = "CREATE" | "UPDATE" | "DELETE" | "LOGIN" | "LOGOUT" | "NAVIGATE_PAGE";
+export type ActionType =
+  | "CREATE"
+  | "UPDATE"
+  | "DELETE"
+  | "LOGIN"
+  | "LOGOUT"
+  | "NAVIGATE_PAGE";
 
 class ActionLog extends BaseModel {
   public userId!: string;
@@ -23,7 +29,14 @@ ActionLog.init(
     },
 
     actionType: {
-      type: DataTypes.ENUM("CREATE", "UPDATE", "DELETE", "LOGIN", "LOGOUT", "NAVIGATE_PAGE"),
+      type: DataTypes.ENUM(
+        "CREATE",
+        "UPDATE",
+        "DELETE",
+        "LOGIN",
+        "LOGOUT",
+        "NAVIGATE_PAGE"
+      ),
       allowNull: false,
     },
 
@@ -75,14 +88,14 @@ export const logAction = (
     return;
   }
 
-  const { userId, ipAddress } = options || {};
+  const { context } = options || {};
 
   const logData = {
-    userId: userId || null,
+    userId: context?.userId || null,
     actionType,
     tableName: instance.constructor.tableName,
     recordId: instance.id,
-    ipAddress: ipAddress || null,
+    ipAddress: context?.ipAddress || null,
     oldData: null,
     newData: null,
   };

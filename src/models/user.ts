@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { CreateOptions, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
 import { logAction } from "./actionLogs";
@@ -36,17 +36,17 @@ User.init(
     tableName: "users",
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: User, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[User] Created user with ID: ${instance.id}`);
+        logger.info(`[User] Created user with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: User, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[User] Updated user with ID: ${instance.id}`);
+        logger.info(`[User] Updated user with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterDestroy: (instance, options) => {
+      afterDestroy: (instance: User, options: CreateOptions<any>) => {
         logAction("DELETE", instance, options);
-        logger.info(`[User] Deleted user with ID: ${instance.id}`);
+        logger.info(`[User] Deleted user with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   }

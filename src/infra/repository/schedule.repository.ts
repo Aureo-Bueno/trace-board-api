@@ -18,16 +18,17 @@ class ScheduleRepository {
 
   async create(
     scheduleData: any,
+    options: CreateOptions = {}
   ): Promise<Schedule> {
-    return await this.schedule.create(scheduleData);
+    return await this.schedule.create(scheduleData, options);
   }
 
-  async update(id: string, scheduleData: any): Promise<Schedule | null> {
+  async update(id: string, scheduleData: any, options: CreateOptions = {}): Promise<Schedule | null> {
     const schedule = await this.schedule.findByPk(id);
     if (!schedule) {
       throw new Error("Schedule not found");
     }
-    return schedule.update(scheduleData);
+    return schedule.update(scheduleData, options);
   }
 
   async delete(id: string) {

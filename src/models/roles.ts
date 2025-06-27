@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { CreateOptions, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 import BaseModel from './base';
 import { logAction } from './actionLogs';
@@ -20,13 +20,13 @@ Roles.init(
     tableName: 'roles',
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: Roles, options: CreateOptions<any>) => {
         logAction('CREATE', instance, options);
-        logger.info(`[Roles] Created role with ID: ${instance.id}`);
+        logger.info(`[Roles] Created role with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: Roles, options: CreateOptions<any>) => {
         logAction('UPDATE', instance, options);
-        logger.info(`[Roles] Updated role with ID: ${instance.id}`);
+        logger.info(`[Roles] Updated role with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   }

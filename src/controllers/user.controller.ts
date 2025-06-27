@@ -9,7 +9,7 @@ class UserController {
   }
 
   update = async (req: Request, res: Response) => {
-    const user = await this.userService.updateUser(req.body as UpdateUserRequest);
+    const user = await this.userService.updateUser(req.body as UpdateUserRequest, req.user?.id || undefined);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -27,11 +27,22 @@ class UserController {
   deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { status } = req.body;
-    const deleted = await this.userService.deleteUser(userId, status);
+    const deleted = await this.userService.deleteUser(userId, status, req.user?.id || undefined);
     if (!deleted) {
       return res.status(404).json({ message: "User not found" });
     }
     return res.status(200).json({ message: "User deleted successfully" });
+  };
+
+  updateProfile = async (req: Request, res: Response) => {
+    if (req?.body?.email) {
+      return res.status(400).json({ message: "Email cannot be updated through this endpoint" });
+    }
+    const user = await this.userService.updateProfile(req.body, req.user?.id || undefined);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json(user);
   };
 }
 

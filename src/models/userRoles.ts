@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { CreateOptions, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
 import { logAction } from "./actionLogs";
@@ -25,17 +25,17 @@ UserRoles.init(
     tableName: "user_roles",
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: UserRoles, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[UserRoles] Created user role with ID: ${instance.id}`);
+        logger.info(`[UserRoles] Created user role with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: UserRoles, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[UserRoles] Updated user role with ID: ${instance.id}`);
+        logger.info(`[UserRoles] Updated user role with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterDestroy: (instance, options) => {
+      afterDestroy: (instance: UserRoles, options: CreateOptions<any>) => {
         logAction("DELETE", instance, options);
-        logger.info(`[UserRoles] Deleted user role with ID: ${instance.id}`);
+        logger.info(`[UserRoles] Deleted user role with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   }

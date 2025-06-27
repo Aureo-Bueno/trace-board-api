@@ -16,11 +16,19 @@ class RoomController {
 
   createRoom = async (req: Request, res: Response) => {
     try {
-      const newRoom = await this.roomService.createRoom(req.body);
+      const newRoom = await this.roomService.createRoom(req.body, req.user?.id ?? undefined);
       return res.status(201).json(newRoom);
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
+  };
+
+  getRoomsAvailable = async (req: Request, res: Response) => {
+    const rooms = await this.roomService.getRoomsAvailable();
+    if (!rooms || (Array.isArray(rooms) && rooms.length === 0)) {
+      return res.status(404).json({ message: "No available rooms found" });
+    }
+    return res.status(200).json(rooms);
   };
 }
 

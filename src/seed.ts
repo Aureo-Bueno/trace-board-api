@@ -16,32 +16,35 @@ export async function seedDatabase() {
     await Schedule.destroy({ where: {}, force: true });
     await Room.destroy({ where: {}, force: true });
     await Address.destroy({ where: {}, force: true });
-    await Role.bulkCreate([{ name: "admin" }, { name: "user" }], {
+    await Role.bulkCreate([{ name: "admin" }, { name: "client" }], {
       ignoreDuplicates: true,
     });
 
-    await User.findOrCreate({
-      where: { email: "admin@example.com" },
+    const [adminUser, adminUserCreated] = await User.findOrCreate({
+      where: { email: "aureoalexandre+admin@outlook.com" },
       defaults: {
-        name: "Admin",
-        lastName: "User",
+        name: "Aureo",
+        lastName: "Bueno Admin",
         password: await bcrypt.hash("admin123", 10),
       },
     });
 
-    const adminUser = await User.findOne({
-      where: { email: "admin@example.com" },
+    const [clientUser, clientUserCreated] = await User.findOrCreate({
+      where: { email: "aureoalexandre+cliente@outlook.com" },
+      defaults: {
+        name: "Aureo",
+        lastName: "Bueno Cliente",
+        password: await bcrypt.hash("user123", 10),
+      },
     });
-    const adminRole = await Role.findOne({ where: { name: "admin" } });
 
-    if (!adminUser) {
-      logger.error("[SeedDatabase] Admin user not found after creation");
-      return;
-    }
-    if (!adminRole) {
-      logger.error("[SeedDatabase] Admin role not found after creation");
-      return;
-    }
+    const [adminRole] = await Role.findOrCreate({
+      where: { name: "admin" },
+    });
+
+    const [clientRole] = await Role.findOrCreate({
+      where: { name: "client" },
+    });
 
     await Address.findOrCreate({
       where: {
@@ -59,10 +62,10 @@ export async function seedDatabase() {
     });
     await Address.findOrCreate({
       where: {
-        userId: adminUser?.id,
-        street: "123 Admin St",
-        city: "Admin City",
-        state: "Admin State",
+        userId: clientUser?.id,
+        street: "123 Client St",
+        city: "Client City",
+        state: "Client State",
         zipCode: "12345",
       },
       defaults: {
@@ -74,16 +77,26 @@ export async function seedDatabase() {
 
     if (adminUser || adminRole) {
       await UserRoles.bulkCreate(
-        [{ userId: adminUser?.id, roleId: adminRole?.id }],
+        [
+          { userId: adminUser?.id, roleId: adminRole.id },
+          { userId: clientUser?.id, roleId: clientRole.id },
+        ],
         { ignoreDuplicates: true }
       );
     }
 
     const rooms = await Room.bulkCreate(
       [
-        { name: "Room A", capacity: 10 },
-        { name: "Room B", capacity: 20 },
-        { name: "Room C", capacity: 30 },
+        { name: "Room 01", capacity: 10, status: "available" },
+        { name: "Room 02", capacity: 20, status: "available" },
+        { name: "Room 03", capacity: 30, status: "occupied" },
+        { name: "Room 04", capacity: 40, status: "available" },
+        { name: "Room 05", capacity: 50, status: "available" },
+        { name: "Room 06", capacity: 60, status: "occupied" },
+        { name: "Room 07", capacity: 70, status: "available" },
+        { name: "Room 08", capacity: 80, status: "occupied" },
+        { name: "Room 09", capacity: 90, status: "available" },
+        { name: "Room 10", capacity: 100, status: "maintenance" },
       ],
       { ignoreDuplicates: true }
     );
@@ -127,12 +140,16 @@ export async function seedDatabase() {
     logger.error(`[SeedDatabase] Error name: ${error?.name}`);
     logger.error(`[SeedDatabase] Error message: ${error?.message}`);
     logger.error(`[SeedDatabase] Error stack: ${error?.stack}`);
-    if (error && typeof error === 'object') {
+    if (error && typeof error === "object") {
       for (const key of Object.keys(error)) {
         logger.error(`[SeedDatabase] Error property [${key}]:`, error[key]);
       }
     }
-    if (error && error.name === "SequelizeValidationError" && Array.isArray(error.errors)) {
+    if (
+      error &&
+      error.name === "SequelizeValidationError" &&
+      Array.isArray(error.errors)
+    ) {
       for (const err of error.errors) {
         logger.error(`[SeedDatabase] Validation error: ${err.message}`);
       }

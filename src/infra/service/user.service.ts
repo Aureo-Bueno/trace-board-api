@@ -5,6 +5,7 @@ import userRepository from "../repository/user.repository";
 import addressService from "./address.service";
 import roleService from "./role.service";
 import userRolesService from "./userRoles.service";
+import { hashPassword } from "../../utils/hashPassword";
 
 class UserService {
   private userRepository: typeof userRepository;
@@ -26,8 +27,10 @@ class UserService {
     return users;
   }
 
-  async createUser(userData: any) {
-    const user = await this.userRepository.create(userData);
+  async createUser(userData: any, userId?: string): Promise<User> {
+    const user = await this.userRepository.create(userData, {
+      context: { userId: userId || null },
+    } as any);
     logger.info(`[CreateUser] User created with ID: ${user.id}`);
     return user;
   }
@@ -52,8 +55,10 @@ class UserService {
     return user;
   }
 
-  async updateUser(userData: UpdateUserRequest) {
-    const user = await this.userRepository.update(userData.id, userData);
+  async updateUser(userData: UpdateUserRequest, userId?: string): Promise<User> {
+    const user = await this.userRepository.update(userData.id, userData, {
+      context: { userId: userId || null },
+    } as any);
 
     logger.info(`[UpdateUser] User with ID ${user.id} updated`);
     return user;
@@ -113,15 +118,30 @@ class UserService {
     return clientsWithAddress;
   }
 
-  async deleteUser(userId: string, status: boolean): Promise<boolean> {
+  async deleteUser(userId: string, status: boolean, requesterId?: string): Promise<boolean> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
       logger.warn(`[DeleteUser] User with ID ${userId} not found`);
       return false;
     }
-    await this.userRepository.softDelete(userId, status);
+    await this.userRepository.softDelete(userId, status, {
+      context: { userId: requesterId || null },
+    } as any);
     logger.info(`[DeleteUser] User with ID ${userId} deleted successfully`);
     return true;
+  }
+
+  async updateProfile(userData: any, userId?: string): Promise<User> {
+    if (userData.password) {
+      userData.password = await hashPassword(userData.password);
+    }
+    const user = await this.userRepository.update(userData.id, userData, {
+      context: { userId: userId || null },
+    } as any);
+
+    await this.addressService.updateAddress(userData.address, user.id);
+    logger.info(`[UpdateProfile] User with ID ${user.id} profile updated`);
+    return user;
   }
 }
 

@@ -12,6 +12,7 @@ import { seedDatabase } from "./seed";
 import userRoute from "./routes/user.route";
 import scheduleRoute from "./routes/schedule.route";
 import roomRoute from "./routes/room.route";
+import addressRoute from "./routes/address.route";
 
 class App {
   public app: Application;
@@ -71,6 +72,7 @@ class App {
     this.app.use("/user", userRoute);
     this.app.use("/schedule", scheduleRoute);
     this.app.use("/room", roomRoute);
+    this.app.use("/address", addressRoute);
   }
 }
 

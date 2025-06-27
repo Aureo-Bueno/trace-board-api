@@ -1,3 +1,4 @@
+import { CreateOptions } from "sequelize";
 import User from "../../models/user";
 
 /**
@@ -21,16 +22,16 @@ class UserRepository {
     return this.user.findByPk(id);
   }
 
-  async create(userData: any) {
-    return this.user.create(userData);
+  async create(userData: any, options: CreateOptions = {}) {
+    return this.user.create(userData, options);
   }
 
-  async update(id: string, userData: any) {
+  async update(id: string, userData: any, options: CreateOptions = {}) {
     const user = await this.user.findByPk(id);
     if (!user) {
       throw new Error("User not found");
     }
-    return user.update(userData);
+    return user.update(userData, options);
   }
 
   async delete(id: string) {
@@ -45,12 +46,12 @@ class UserRepository {
     return this.user.findOne({ where: { email } });
   }
 
-  async softDelete(id: string, status: boolean) {
+  async softDelete(id: string, status: boolean, options: CreateOptions = {}) {
     const user = await this.user.findByPk(id);
     if (!user) {
       throw new Error("User not found");
     }
-    return user.update({ deletedAt: status ? new Date() : null });
+    return user.update({ deletedAt: status ? new Date() : null }, options);
   }
 }
 

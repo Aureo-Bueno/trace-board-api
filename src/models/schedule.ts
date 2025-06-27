@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { CreateOptions, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
 import { logAction } from "./actionLogs";
@@ -48,13 +48,13 @@ Schedule.init(
     tableName: "schedules",
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: Schedule, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[Schedule] Created schedule with ID: ${instance.id}`);
+        logger.info(`[Schedule] Created schedule with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: Schedule, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[Schedule] Updated schedule with ID: ${instance.id}`);
+        logger.info(`[Schedule] Updated schedule with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   }

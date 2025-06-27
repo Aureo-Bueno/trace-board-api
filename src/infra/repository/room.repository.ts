@@ -1,3 +1,4 @@
+import { CreateOptions } from "sequelize/types/model";
 import Room from "../../models/room";
 
 class RoomRepository {
@@ -15,16 +16,20 @@ class RoomRepository {
     return await this.room.findByPk(id);
   }
 
-  async create(roomData: any): Promise<Room> {
-    return await this.room.create(roomData);
+  async create(roomData: any, options: CreateOptions<any>): Promise<Room> {
+    return await this.room.create(roomData, options);
   }
 
-  async update(id: string, roomData: any): Promise<Room | null> {
+  async update(id: string, roomData: any, options: CreateOptions<any>): Promise<Room | null> {
     const room = await this.room.findByPk(id);
     if (!room) {
       throw new Error("Room not found");
     }
-    return room.update(roomData);
+    return room.update(roomData, options);
+  }
+
+  async findByStatus(status: string): Promise<Room[]> {
+    return await this.room.findAll({ where: { status } });
   }
 }
 

@@ -1,3 +1,4 @@
+import { create } from "domain";
 import logger from "../../config/logger";
 import ActionLog from "../../models/actionLogs";
 import actionLogRepository from "../repository/actionLogs.repository";
@@ -102,6 +103,7 @@ class ActionLogsService {
       type: actionTypeMap[log.actionType] || log.actionType,
       module: tableNameMap[log.tableName] || log.tableName,
       recordId: log.recordId,
+      createdAt: log.createdAt,
     }));
   }
 

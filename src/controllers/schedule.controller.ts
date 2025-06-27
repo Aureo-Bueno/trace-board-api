@@ -35,8 +35,33 @@ class ScheduleController {
 
   createSchedule = async (req: Request, res: Response) => {
     try {
+      const newSchedule = await this.scheduleService.createSchedule(
+        req.body,
+        req.user?.id || null
+      );
+      return res.status(201).json(newSchedule);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
 
-      const newSchedule = await this.scheduleService.createSchedule(req.body);
+  getSchedulesByUserId = async (req: Request, res: Response) => {
+    const userId = req.params.userId as string;
+    const schedules = await this.scheduleService.getSchedulesByUserId(userId);
+    if (!schedules || schedules.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No schedules found for this user" });
+    }
+    return res.status(200).json(schedules);
+  };
+
+  createScheduleByUser = async (req: Request, res: Response) => {
+    try {
+      const newSchedule = await this.scheduleService.createScheduleByUser(
+        req.body,
+        req.user?.id || null
+      );
       return res.status(201).json(newSchedule);
     } catch (error: any) {
       return res.status(500).json({ message: error.message });

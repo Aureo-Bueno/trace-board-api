@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { CreateOptions, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import BaseModel from "./base";
 import { logAction } from "./actionLogs";
@@ -62,13 +62,13 @@ Address.init(
     tableName: "addresses",
     sequelize,
     hooks: {
-      afterCreate: (instance, options) => {
+      afterCreate: (instance: Address, options: CreateOptions<any>) => {
         logAction("CREATE", instance, options);
-        logger.info(`[Address] Created address with ID: ${instance.id}`);
+        logger.info(`[Address] Created address with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
-      afterUpdate: (instance, options) => {
+      afterUpdate: (instance: Address, options: CreateOptions<any>) => {
         logAction("UPDATE", instance, options);
-        logger.info(`[Address] Updated address with ID: ${instance.id}`);
+        logger.info(`[Address] Updated address with ID: ${instance.id}, ${JSON.stringify(options)}`);
       },
     },
   }
